@@ -1,0 +1,2629 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WPI Admin Hub - Sistem Administrasi Terpadu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #eff6ff;
+      --secondary: #475569;
+      --success: #10b981;
+      --success-light: #ecfdf5;
+      --warning: #f59e0b;
+      --warning-light: #fffbeb;
+      --danger: #ef4444;
+      --danger-light: #fef2f2;
+      --info: #06b6d4;
+      --info-light: #ecfeff;
+      --purple: #8b5cf6;
+      --purple-light: #f5f3ff;
+      
+      --bg-body: #f8fafc;
+      --bg-surface: #ffffff;
+      --border-color: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+      
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation */
+    header {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-badge {
+      font-size: 0.7rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.85rem;
+      background: #f1f5f9;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .sync-status:hover {
+      background: #e2e8f0;
+    }
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #94a3b8;
+    }
+    .sync-dot.connected {
+      background: var(--success);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+    }
+
+    .live-clock {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: #f8fafc;
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      display: none;
+    }
+    @media (min-width: 768px) {
+      .live-clock { display: block; }
+    }
+
+    /* Main Navigation Tabs */
+    .nav-tabs-wrapper {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-tabs {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .nav-tab-btn {
+      padding: 0.95rem 1.15rem;
+      border: none;
+      background: transparent;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      position: relative;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .nav-tab-btn:hover {
+      color: var(--primary);
+    }
+    .nav-tab-btn.active {
+      color: var(--primary);
+    }
+    .nav-tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--primary);
+      border-radius: 3px 3px 0 0;
+    }
+    .nav-tab-badge {
+      background: #e2e8f0;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+    }
+    .nav-tab-btn.active .nav-tab-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    /* Main Container */
+    main {
+      flex: 1;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Tab Content Areas */
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Cards Row */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .kpi-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 1.15rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .kpi-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .kpi-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+    .kpi-icon.blue { background: var(--primary-light); color: var(--primary); }
+    .kpi-icon.emerald { background: var(--success-light); color: var(--success); }
+    .kpi-icon.amber { background: var(--warning-light); color: var(--warning); }
+    .kpi-icon.rose { background: var(--danger-light); color: var(--danger); }
+    .kpi-icon.purple { background: var(--purple-light); color: var(--purple); }
+
+    .kpi-content {
+      flex: 1;
+    }
+    .kpi-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.25rem;
+    }
+    .kpi-value {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+    .kpi-subtext {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    /* Common Card Box */
+    .card-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.75rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card-title-icon {
+      color: var(--primary);
+      font-size: 1.15rem;
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .card-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.18s;
+      text-decoration: none;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border-color);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+    }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .btn-success:hover {
+      background: #059669;
+    }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+    .btn-sm {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      border-radius: var(--radius-sm);
+    }
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Filters Bar */
+    .filter-bar {
+      padding: 1rem 1.5rem;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      min-width: 240px;
+    }
+    .search-input-wrapper i {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-subtle);
+      font-size: 0.85rem;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.5rem 0.85rem 0.5rem 2.2rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.84rem;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .select-filter {
+      padding: 0.5rem 0.85rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.84rem;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      outline: none;
+      cursor: pointer;
+    }
+    .select-filter:focus {
+      border-color: var(--primary);
+    }
+
+    /* Table Styles */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    thead th {
+      background: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    tbody tr {
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.15s;
+    }
+    tbody tr:hover {
+      background-color: #f8fafc;
+    }
+    tbody td {
+      padding: 0.9rem 1.25rem;
+      vertical-align: middle;
+      color: var(--text-main);
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.28rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.74rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-gray { background: #f1f5f9; color: #475569; }
+    .badge-blue { background: var(--primary-light); color: var(--primary); }
+    .badge-green { background: var(--success-light); color: var(--success); }
+    .badge-yellow { background: var(--warning-light); color: #b45309; }
+    .badge-red { background: var(--danger-light); color: var(--danger); }
+    .badge-purple { background: var(--purple-light); color: var(--purple); }
+
+    /* Checklist Progress Bar */
+    .progress-bar-wrap {
+      background: #e2e8f0;
+      border-radius: var(--radius-full);
+      height: 8px;
+      overflow: hidden;
+      flex: 1;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #10b981, #059669);
+      height: 100%;
+      border-radius: var(--radius-full);
+      transition: width 0.4s ease;
+    }
+
+    /* Checkbox Custom */
+    .task-checkbox {
+      width: 19px;
+      height: 19px;
+      cursor: pointer;
+      accent-color: var(--success);
+      margin-right: 0.5rem;
+    }
+
+    /* Modal Dialog */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .modal-backdrop.show {
+      display: flex;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-dialog {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      max-width: 580px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: modalSlideUp 0.25s ease-out;
+    }
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px) scale(0.97); }
+      to { transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.25rem;
+      border-radius: var(--radius-sm);
+    }
+    .modal-close-btn:hover {
+      color: var(--text-main);
+      background: #f1f5f9;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      background: #f8fafc;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 1.15rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+    }
+    .form-label .required {
+      color: var(--danger);
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+    textarea.form-control {
+      resize: vertical;
+      min-height: 75px;
+    }
+
+    /* Floating Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+    .toast-message {
+      background: #0f172a;
+      color: white;
+      padding: 0.75rem 1.15rem;
+      border-radius: var(--radius-md);
+      font-size: 0.84rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      pointer-events: auto;
+      animation: toastIn 0.25s ease-out;
+    }
+    @keyframes toastIn {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Due Date Pill States */
+    .due-overdue {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .due-warning {
+      color: #b45309;
+      font-weight: 700;
+    }
+    .due-safe {
+      color: var(--text-muted);
+    }
+
+    /* Empty state */
+    .empty-state {
+      padding: 3rem 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .empty-state i {
+      font-size: 2.5rem;
+      color: var(--text-subtle);
+      margin-bottom: 0.85rem;
+    }
+    .empty-state-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.25rem;
+    }
+    .empty-state-desc {
+      font-size: 0.82rem;
+    }
+
+    /* Print View */
+    @media print {
+      header, .nav-tabs-wrapper, .filter-bar, .card-actions, .btn, .modal-backdrop, .toast-container {
+        display: none !important;
+      }
+      body {
+        background: white;
+        color: black;
+      }
+      .card-box {
+        border: none;
+        box-shadow: none;
+      }
+      .tab-pane {
+        display: block !important;
+        margin-bottom: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="header-container">
+      <a href="#" class="brand-logo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <div>
+          <div class="brand-title">
+            WPI ADMIN HUB <span class="brand-badge">Sistem Terpadu</span>
+          </div>
+          <div class="brand-subtitle">Job Desk Harian • Monitoring Purchasing • Monitoring Tagihan</div>
+        </div>
+      </a>
+
+      <div class="header-actions">
+        <div class="live-clock" id="liveClockDisplay">
+          <i class="fa-regular fa-clock"></i> <span id="clockText">Memuat waktu...</span>
+        </div>
+        <div class="sync-status" onclick="openSyncModal()" title="Klik untuk pengaturan database cloud Google Spreadsheet">
+          <span class="sync-dot" id="syncStatusDot"></span>
+          <span id="syncStatusText">Database Lokal (Ready)</span>
+          <i class="fa-solid fa-cloud" style="font-size: 0.8rem; margin-left: 2px;"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <div class="nav-tabs-wrapper">
+    <div class="nav-tabs">
+      <button class="nav-tab-btn active" onclick="switchTab('dashboard')">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Dashboard Utama</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('jobdesk')">
+        <i class="fa-solid fa-list-check"></i>
+        <span>Checklist Job Desk</span>
+        <span class="nav-tab-badge" id="badgeJobdeskCount">0</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('purchasing')">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span>Monitoring Purchasing</span>
+        <span class="nav-tab-badge" id="badgePurchasingCount">0</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('tagihan')">
+        <i class="fa-solid fa-file-invoice-dollar"></i>
+        <span>Monitoring Tagihan</span>
+        <span class="nav-tab-badge" id="badgeTagihanCount">0</span>
+      </button>
+      <button class="nav-tab-btn" onclick="switchTab('settings')">
+        <i class="fa-solid fa-gear"></i>
+        <span>Pengaturan & Data</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <main>
+
+    <!-- ============================================== -->
+    <!-- TAB 1: DASHBOARD UTAMA                         -->
+    <!-- ============================================== -->
+    <div id="tab-dashboard" class="tab-pane active">
+      <!-- KPI Row -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon emerald">
+            <i class="fa-solid fa-check-double"></i>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Progress Job Desk Hari Ini</div>
+            <div class="kpi-value" id="kpiJobdeskPercent">0%</div>
+            <div class="kpi-subtext" id="kpiJobdeskRatio">0 dari 0 tugas selesai</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon blue">
+            <i class="fa-solid fa-boxes-packing"></i>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Purchasing Aktif</div>
+            <div class="kpi-value" id="kpiPurchasingActive">0 Item</div>
+            <div class="kpi-subtext" id="kpiPurchasingSub">Dalam pengajuan & proses kirim</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon rose">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Tagihan Overdue / Segera</div>
+            <div class="kpi-value" id="kpiTagihanAlertCount">0 Tagihan</div>
+            <div class="kpi-subtext" id="kpiTagihanAlertNominal">Rp 0 perlu atensi</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon purple">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+          <div class="kpi-content">
+            <div class="kpi-label">Total Tagihan Belum Lunas</div>
+            <div class="kpi-value" id="kpiTagihanUnpaidTotal" style="font-size: 1.3rem;">Rp 0</div>
+            <div class="kpi-subtext" id="kpiTagihanUnpaidCount">0 invoice pending</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Summary Cards Layout -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1.5rem;">
+        
+        <!-- Quick Job Desk Widget -->
+        <div class="card-box">
+          <div class="card-header">
+            <div class="card-title-group">
+              <i class="fa-solid fa-list-check card-title-icon"></i>
+              <div>
+                <div class="card-title">Tugas Job Desk Hari Ini</div>
+                <div class="card-subtitle">Prioritas penyelesaian staf administrasi</div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="switchTab('jobdesk')">
+              Lihat Semua <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th width="40">Status</th>
+                  <th>Tugas</th>
+                  <th>Kategori</th>
+                  <th>Waktu</th>
+                  <th>PIC</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardTasksList">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quick Urgent Invoices Widget -->
+        <div class="card-box">
+          <div class="card-header">
+            <div class="card-title-group">
+              <i class="fa-solid fa-bell card-title-icon" style="color: var(--danger);"></i>
+              <div>
+                <div class="card-title">Tagihan Perlu Perhatian</div>
+                <div class="card-subtitle">Jatuh tempo terdekat & terlambat</div>
+              </div>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="switchTab('tagihan')">
+              Buka Tagihan <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>No. Invoice</th>
+                  <th>Vendor</th>
+                  <th>Jatuh Tempo</th>
+                  <th>Nominal</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardInvoicesList">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- TAB 2: CHECKLIST JOB DESK                      -->
+    <!-- ============================================== -->
+    <div id="tab-jobdesk" class="tab-pane">
+      <div class="card-box">
+        <div class="card-header">
+          <div class="card-title-group">
+            <i class="fa-solid fa-list-check card-title-icon"></i>
+            <div>
+              <div class="card-title">Daftar Checklist Job Desk Staf Administrasi</div>
+              <div class="card-subtitle">Pantau dan centang tugas rutin harian, mingguan, dan bulanan</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-outline btn-sm" onclick="resetTodayTasks()">
+              <i class="fa-solid fa-arrows-rotate"></i> Reset Checklist Hari Baru
+            </button>
+            <button class="btn btn-primary btn-sm" onclick="openAddTaskModal()">
+              <i class="fa-solid fa-plus"></i> Tambah Tugas Baru
+            </button>
+          </div>
+        </div>
+
+        <!-- Progress Header Banner -->
+        <div style="padding: 1rem 1.5rem; background: #f1f5f9; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 1rem;">
+          <div style="font-weight: 700; font-size: 0.85rem; color: var(--text-main); white-space: nowrap;">
+            Penyelesaian Hari Ini:
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="jobdeskProgressBar" style="width: 0%;"></div>
+          </div>
+          <div style="font-weight: 800; font-size: 0.9rem; color: var(--success); white-space: nowrap;" id="jobdeskProgressPercent">
+            0%
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="taskSearchInput" class="search-input" placeholder="Cari nama tugas atau PIC..." oninput="renderJobdeskTable()">
+            </div>
+            <select id="taskCategoryFilter" class="select-filter" onchange="renderJobdeskTable()">
+              <option value="all">Semua Kategori</option>
+              <option value="Administrasi & Arsip">Administrasi & Arsip</option>
+              <option value="Operasional Kantor">Operasional Kantor</option>
+              <option value="Keuangan & Kasir">Keuangan & Kasir</option>
+              <option value="Laporan & Rekap">Laporan & Rekap</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+            <select id="taskFreqFilter" class="select-filter" onchange="renderJobdeskTable()">
+              <option value="all">Semua Frekuensi</option>
+              <option value="Harian Pagi">Harian Pagi</option>
+              <option value="Harian Sore">Harian Sore</option>
+              <option value="Mingguan">Mingguan</option>
+              <option value="Bulanan">Bulanan</option>
+              <option value="Insidental">Insidental</option>
+            </select>
+            <select id="taskStatusFilter" class="select-filter" onchange="renderJobdeskTable()">
+              <option value="all">Semua Status</option>
+              <option value="pending">Belum Selesai</option>
+              <option value="completed">Sudah Selesai</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <button class="btn btn-outline btn-sm" onclick="exportJobdeskCSV()">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="window.print()">
+              <i class="fa-solid fa-print"></i> Cetak
+            </button>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th width="50">Check</th>
+                <th>Nama Pekerjaan / Tugas</th>
+                <th>Kategori</th>
+                <th>Frekuensi</th>
+                <th>Target Waktu</th>
+                <th>PIC</th>
+                <th>Catatan / Keterangan</th>
+                <th width="100">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="jobdeskTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- TAB 3: MONITORING PURCHASING                   -->
+    <!-- ============================================== -->
+    <div id="tab-purchasing" class="tab-pane">
+      <div class="card-box">
+        <div class="card-header">
+          <div class="card-title-group">
+            <i class="fa-solid fa-cart-shopping card-title-icon"></i>
+            <div>
+              <div class="card-title">Monitoring Pengadaan Barang (Purchasing)</div>
+              <div class="card-subtitle">Lacak status pesanan, vendor, estimasi tiba, dan pengeluaran barang</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-primary btn-sm" onclick="openAddPurchasingModal()">
+              <i class="fa-solid fa-plus"></i> Ajukan Pengadaan Baru
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="purchasingSearchInput" class="search-input" placeholder="Cari nama barang, No PO, vendor..." oninput="renderPurchasingTable()">
+            </div>
+            <select id="purchasingStatusFilter" class="select-filter" onchange="renderPurchasingTable()">
+              <option value="all">Semua Status</option>
+              <option value="Diajukan">Diajukan</option>
+              <option value="Disetujui">Disetujui</option>
+              <option value="Proses Beli/Order">Proses Beli/Order</option>
+              <option value="Dalam Pengiriman">Dalam Pengiriman</option>
+              <option value="Barang Diterima">Barang Diterima (Selesai)</option>
+              <option value="Ditolak">Ditolak / Dibatalkan</option>
+            </select>
+            <select id="purchasingCategoryFilter" class="select-filter" onchange="renderPurchasingTable()">
+              <option value="all">Semua Kategori</option>
+              <option value="ATK & Kertas">ATK & Kertas</option>
+              <option value="Sparepart & Alat">Sparepart & Alat</option>
+              <option value="Bahan Produksi">Bahan Produksi</option>
+              <option value="Operasional & Rumah Tangga">Operasional & Rumah Tangga</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <button class="btn btn-outline btn-sm" onclick="exportPurchasingCSV()">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>No. Permohonan / PO</th>
+                <th>Tanggal Request</th>
+                <th>Nama Barang / Jasa</th>
+                <th>Kategori</th>
+                <th>Divisi</th>
+                <th>Qty</th>
+                <th>Estimasi Total</th>
+                <th>Vendor / Toko</th>
+                <th>Status</th>
+                <th>Est. Tiba / Tiba</th>
+                <th width="110">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="purchasingTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- TAB 4: MONITORING TAGIHAN                      -->
+    <!-- ============================================== -->
+    <div id="tab-tagihan" class="tab-pane">
+      <div class="card-box">
+        <div class="card-header">
+          <div class="card-title-group">
+            <i class="fa-solid fa-file-invoice-dollar card-title-icon"></i>
+            <div>
+              <div class="card-title">Monitoring Tagihan & Invoice Masuk</div>
+              <div class="card-subtitle">Pengawasan jatuh tempo, status pelunasan vendor, dan arus hutang usaha</div>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="btn btn-primary btn-sm" onclick="openAddTagihanModal()">
+              <i class="fa-solid fa-plus"></i> Catat Tagihan Baru
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <div class="search-input-wrapper">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="tagihanSearchInput" class="search-input" placeholder="Cari No. Invoice, vendor, keterangan..." oninput="renderTagihanTable()">
+            </div>
+            <select id="tagihanStatusFilter" class="select-filter" onchange="renderTagihanTable()">
+              <option value="all">Semua Status</option>
+              <option value="unpaid">Belum Lunas (Pending)</option>
+              <option value="overdue">Terlambat (Overdue)</option>
+              <option value="due_soon">Jatuh Tempo Segera (&le; 3 Hari)</option>
+              <option value="paid">Sudah Lunas</option>
+            </select>
+            <select id="tagihanCategoryFilter" class="select-filter" onchange="renderTagihanTable()">
+              <option value="all">Semua Kategori</option>
+              <option value="Vendor Bahan">Vendor Bahan</option>
+              <option value="Utilitas (Listrik/Air/Internet)">Utilitas (Listrik/Air/Internet)</option>
+              <option value="Ekspedisi & Transport">Ekspedisi & Transport</option>
+              <option value="Jasa & Pemeliharaan">Jasa & Pemeliharaan</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <button class="btn btn-outline btn-sm" onclick="exportTagihanCSV()">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="window.print()">
+              <i class="fa-solid fa-print"></i> Cetak Laporan
+            </button>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>No. Invoice</th>
+                <th>Nama Vendor / Mitra</th>
+                <th>Kategori</th>
+                <th>Keterangan</th>
+                <th>Nominal (Rp)</th>
+                <th>Tgl Tagihan</th>
+                <th>Jatuh Tempo</th>
+                <th>Status Pembayaran</th>
+                <th>Tgl Lunas</th>
+                <th width="120">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tagihanTableBody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- TAB 5: PENGATURAN & SINKRONISASI               -->
+    <!-- ============================================== -->
+    <div id="tab-settings" class="tab-pane">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 1.5rem;">
+        
+        <!-- Google Sheets Cloud Sync Card -->
+        <div class="card-box">
+          <div class="card-header">
+            <div class="card-title-group">
+              <i class="fa-brands fa-google-drive card-title-icon" style="color: #0f9d58;"></i>
+              <div>
+                <div class="card-title">Sinkronisasi Google Spreadsheet (Gratis)</div>
+                <div class="card-subtitle">Hubungkan web ini ke Google Sheet agar bisa dibuka bersama tim</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 1.5rem;">
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">
+              Anda dapat menghubungkan aplikasi ini ke Google Spreadsheet secara gratis menggunakan Google Apps Script Web App URL. Seluruh data Job Desk, Purchasing, dan Tagihan akan otomatis tersimpan rapi di spreadsheet Anda.
+            </p>
+            <div class="form-group">
+              <label class="form-label">Google Apps Script Web App URL:</label>
+              <input type="text" id="settingGasUrl" class="form-control" placeholder="https://script.google.com/macros/s/AKfycb.../exec">
+            </div>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+              <button class="btn btn-primary btn-sm" onclick="saveGasUrl()">
+                <i class="fa-solid fa-save"></i> Simpan URL
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="testGasConnection()">
+                <i class="fa-solid fa-plug"></i> Tes Koneksi
+              </button>
+              <button class="btn btn-success btn-sm" onclick="syncAllToCloud()">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload Data ke Cloud Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Backup & Restore Data Card -->
+        <div class="card-box">
+          <div class="card-header">
+            <div class="card-title-group">
+              <i class="fa-solid fa-database card-title-icon"></i>
+              <div>
+                <div class="card-title">Cadangan & Pemulihan (Backup/Restore)</div>
+                <div class="card-subtitle">Amankan seluruh data sistem ke file cadangan di laptop Anda</div>
+              </div>
+            </div>
+          </div>
+          <div style="padding: 1.5rem;">
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+              Simpan seluruh database lokal (Checklist, Purchasing, Tagihan) ke file JSON. Anda dapat memulihkannya kapan saja di komputer atau browser lain.
+            </p>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+              <button class="btn btn-outline btn-sm" onclick="downloadBackupJSON()">
+                <i class="fa-solid fa-download"></i> Download File Cadangan (JSON)
+              </button>
+              <label class="btn btn-outline btn-sm" style="cursor: pointer;">
+                <i class="fa-solid fa-upload"></i> Restore Data dari File JSON
+                <input type="file" id="restoreFileInput" accept=".json" style="display: none;" onchange="handleRestoreJSON(event)">
+              </label>
+            </div>
+            <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.25rem 0;">
+            <div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: var(--danger); margin-bottom: 0.35rem;">
+                Muat Ulang Data Contoh WPI:
+              </div>
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                Jika ingin mengembalikan data sampel standar staf administrasi WPI (checklist harian, purchasing kertas/sparepart, dan tagihan vendor).
+              </p>
+              <button class="btn btn-outline btn-sm" style="color: var(--danger); border-color: var(--danger);" onclick="loadSampleData()">
+                <i class="fa-solid fa-rotate-left"></i> Muat Ulang Data Standar
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ============================================== -->
+  <!-- MODAL DIALOGS                                  -->
+  <!-- ============================================== -->
+
+  <!-- Modal 1: Tambah / Edit Tugas Job Desk -->
+  <div id="modalTask" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTaskTitle">Tambah Tugas Job Desk</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalTask')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formTask" onsubmit="handleSaveTask(event)">
+          <input type="hidden" id="taskId">
+          <div class="form-group">
+            <label class="form-label">Nama Pekerjaan / Tugas <span class="required">*</span></label>
+            <input type="text" id="taskTitle" class="form-control" required placeholder="Contoh: Cek email masuk & arsipkan surat jalan">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select id="taskCategory" class="form-control">
+                <option value="Administrasi & Arsip">Administrasi & Arsip</option>
+                <option value="Operasional Kantor">Operasional Kantor</option>
+                <option value="Keuangan & Kasir">Keuangan & Kasir</option>
+                <option value="Laporan & Rekap">Laporan & Rekap</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Frekuensi</label>
+              <select id="taskFrequency" class="form-control">
+                <option value="Harian Pagi">Harian Pagi</option>
+                <option value="Harian Sore">Harian Sore</option>
+                <option value="Mingguan">Mingguan</option>
+                <option value="Bulanan">Bulanan</option>
+                <option value="Insidental">Insidental</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Target Waktu / Jam Deadline</label>
+              <input type="text" id="taskDueTime" class="form-control" placeholder="Contoh: 09:00 WIB atau Pkl 16:30">
+            </div>
+            <div class="form-group">
+              <label class="form-label">PIC / Petugas</label>
+              <input type="text" id="taskPic" class="form-control" placeholder="Contoh: Staf Admin">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan / Detail Tambahan</label>
+            <textarea id="taskNotes" class="form-control" placeholder="Tulis rincian atau tautan file jika ada..."></textarea>
+          </div>
+          <div class="modal-footer" style="padding: 0; margin-top: 1.5rem; background: none; border: none;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('modalTask')">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan Tugas</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Tambah / Edit Purchasing Barang -->
+  <div id="modalPurchasing" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalPurchasingTitle">Pengajuan Purchasing Barang</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalPurchasing')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formPurchasing" onsubmit="handleSavePurchasing(event)">
+          <input type="hidden" id="purchasingId">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">No. Pengajuan / PO <span class="required">*</span></label>
+              <input type="text" id="purchasingNo" class="form-control" required placeholder="PO-2026-001">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tanggal Pengajuan <span class="required">*</span></label>
+              <input type="date" id="purchasingDate" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nama Barang / Pengadaan <span class="required">*</span></label>
+            <input type="text" id="purchasingItem" class="form-control" required placeholder="Contoh: Kertas HVS A4 70gr (10 Rim)">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kategori</label>
+              <select id="purchasingCat" class="form-control">
+                <option value="ATK & Kertas">ATK & Kertas</option>
+                <option value="Sparepart & Alat">Sparepart & Alat</option>
+                <option value="Bahan Produksi">Bahan Produksi</option>
+                <option value="Operasional & Rumah Tangga">Operasional & Rumah Tangga</option>
+                <option value="Lain-lain">Lain-lain</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Divisi Pemohon</label>
+              <input type="text" id="purchasingDivision" class="form-control" placeholder="Contoh: Administrasi / Offset / Finishing">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Jumlah (Qty)</label>
+              <input type="text" id="purchasingQty" class="form-control" placeholder="Contoh: 10 Rim / 2 Unit">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimasi Total Biaya (Rp)</label>
+              <input type="number" id="purchasingCost" class="form-control" placeholder="Contoh: 450000">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Vendor / Toko / Supplier</label>
+              <input type="text" id="purchasingVendor" class="form-control" placeholder="Contoh: Toko Kertas Maju Jaya">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status Pengadaan</label>
+              <select id="purchasingStatus" class="form-control">
+                <option value="Diajukan">Diajukan</option>
+                <option value="Disetujui">Disetujui</option>
+                <option value="Proses Beli/Order">Proses Beli/Order</option>
+                <option value="Dalam Pengiriman">Dalam Pengiriman</option>
+                <option value="Barang Diterima">Barang Diterima (Selesai)</option>
+                <option value="Ditolak">Ditolak</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Estimasi Tiba / Tgl Terima</label>
+              <input type="date" id="purchasingEstArrival" class="form-control">
+            </div>
+            <div class="form-group">
+              <label class="form-label">No. Resi / Keterangan</label>
+              <input type="text" id="purchasingNotes" class="form-control" placeholder="No resi pengiriman / catatan">
+            </div>
+          </div>
+          <div class="modal-footer" style="padding: 0; margin-top: 1.5rem; background: none; border: none;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('modalPurchasing')">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan Pengadaan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Tambah / Edit Tagihan & Invoice -->
+  <div id="modalTagihan" class="modal-backdrop">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalTagihanTitle">Catat Tagihan & Invoice</h3>
+        <button class="modal-close-btn" onclick="closeModal('modalTagihan')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formTagihan" onsubmit="handleSaveTagihan(event)">
+          <input type="hidden" id="tagihanId">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">No. Invoice / Faktur <span class="required">*</span></label>
+              <input type="text" id="tagihanInvoiceNo" class="form-control" required placeholder="Contoh: INV-2026/09/88">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Nama Vendor / Mitra <span class="required">*</span></label>
+              <input type="text" id="tagihanVendor" class="form-control" required placeholder="Contoh: CV Prima Lestari">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kategori Tagihan</label>
+              <select id="tagihanCategory" class="form-control">
+                <option value="Vendor Bahan">Vendor Bahan</option>
+                <option value="Utilitas (Listrik/Air/Internet)">Utilitas (Listrik/Air/Internet)</option>
+                <option value="Ekspedisi & Transport">Ekspedisi & Transport</option>
+                <option value="Jasa & Pemeliharaan">Jasa & Pemeliharaan</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Total Nominal Tagihan (Rp) <span class="required">*</span></label>
+              <input type="number" id="tagihanAmount" class="form-control" required placeholder="Contoh: 1500000">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tanggal Tagihan</label>
+              <input type="date" id="tagihanDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tanggal Jatuh Tempo <span class="required">*</span></label>
+              <input type="date" id="tagihanDueDate" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Keperluan / Keterangan Tagihan</label>
+            <input type="text" id="tagihanDesc" class="form-control" placeholder="Contoh: Pembelian tinta offset batch 3">
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Status Pembayaran</label>
+              <select id="tagihanStatus" class="form-control" onchange="togglePaymentDateGroup()">
+                <option value="unpaid">Belum Lunas (Pending)</option>
+                <option value="paid">Sudah Lunas (Paid)</option>
+              </select>
+            </div>
+            <div class="form-group" id="groupPaymentDate">
+              <label class="form-label">Tanggal Pelunasan</label>
+              <input type="date" id="tagihanPaidDate" class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer" style="padding: 0; margin-top: 1.5rem; background: none; border: none;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('modalTagihan')">Batal</button>
+            <button type="submit" class="btn btn-primary">Simpan Tagihan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ============================================== -->
+  <!-- JAVASCRIPT CORE LOGIC                          -->
+  <!-- ============================================== -->
+  <script>
+    // --- STORAGE KEYS ---
+    const STORAGE_KEY_TASKS = 'wpi_admin_tasks_v1';
+    const STORAGE_KEY_PURCHASING = 'wpi_admin_purchasing_v1';
+    const STORAGE_KEY_TAGIHAN = 'wpi_admin_tagihan_v1';
+    const STORAGE_KEY_GAS_URL = 'wpi_admin_gas_url_v1';
+
+    // --- STATE VARIABLES ---
+    let state = {
+      tasks: [],
+      purchasing: [],
+      tagihan: [],
+      gasUrl: localStorage.getItem(STORAGE_KEY_GAS_URL) || ''
+    };
+
+    // --- SAMPLE INITIAL DATA (WPI SPECIFIC) ---
+    const sampleTasks = [
+      {
+        id: 'TASK-001',
+        title: 'Cek & balas email masuk serta WhatsApp administrasi pesanan',
+        category: 'Administrasi & Arsip',
+        frequency: 'Harian Pagi',
+        dueTime: '08:30 WIB',
+        pic: 'Staf Admin',
+        status: 'completed',
+        notes: 'Seluruh permohonan penawaran sudah diteruskan ke sales'
+      },
+      {
+        id: 'TASK-002',
+        title: 'Input & rekap Surat Perintah Kerja (SPK) harian ke database',
+        category: 'Administrasi & Arsip',
+        frequency: 'Harian Pagi',
+        dueTime: '10:00 WIB',
+        pic: 'Staf Admin',
+        status: 'completed',
+        notes: 'SPK cetak offset hari ini telah terverifikasi'
+      },
+      {
+        id: 'TASK-003',
+        title: 'Monitoring status purchasing & konfirmasi pengiriman vendor kertas',
+        category: 'Operasional Kantor',
+        frequency: 'Harian Pagi',
+        dueTime: '11:00 WIB',
+        pic: 'Purchasing Admin',
+        status: 'pending',
+        notes: 'Tunggu konfirmasi ekspedisi kargo kertas HVS'
+      },
+      {
+        id: 'TASK-004',
+        title: 'Pengecekan tagihan jatuh tempo minggu ini & ajukan ke keuangan',
+        category: 'Keuangan & Kasir',
+        frequency: 'Harian Sore',
+        dueTime: '14:00 WIB',
+        pic: 'Staf Keuangan',
+        status: 'pending',
+        notes: 'Prioritas tagihan listrik & supplier pelat cetak'
+      },
+      {
+        id: 'TASK-005',
+        title: 'Rekap absen staf dan laporan pekerjaan harian',
+        category: 'Laporan & Rekap',
+        frequency: 'Harian Sore',
+        dueTime: '16:30 WIB',
+        pic: 'Staf Admin',
+        status: 'pending',
+        notes: 'Kirimkan ringkasan sebelum jam pulang kantor'
+      }
+    ];
+
+    const samplePurchasing = [
+      {
+        id: 'PO-2026-001',
+        poNumber: 'PO-2026-001',
+        requestDate: '2026-09-20',
+        itemName: 'Kertas HVS 70gr Ukuran Plano (15 Rim)',
+        category: 'Bahan Produksi',
+        division: 'Produksi Offset',
+        qty: '15 Rim',
+        estimatedCost: 1850000,
+        vendor: 'CV Berkat Kertas Mandiri',
+        status: 'Dalam Pengiriman',
+        estArrivalDate: '2026-09-25',
+        notes: 'Resi JNE Cargo: JNE-99482103'
+      },
+      {
+        id: 'PO-2026-002',
+        poNumber: 'PO-2026-002',
+        requestDate: '2026-09-22',
+        itemName: 'Refill Toner Printer HP LaserJet & Kertas A4',
+        category: 'ATK & Kertas',
+        division: 'Administrasi',
+        qty: '3 Unit & 5 Rim',
+        estimatedCost: 650000,
+        vendor: 'Sentral ATK Office',
+        status: 'Barang Diterima',
+        estArrivalDate: '2026-09-24',
+        notes: 'Diterima oleh Admin Kantor, kondisi baik'
+      },
+      {
+        id: 'PO-2026-003',
+        poNumber: 'PO-2026-003',
+        requestDate: '2026-09-24',
+        itemName: 'Sparepart Karet Roll Mesin Lipat',
+        category: 'Sparepart & Alat',
+        division: 'Finishing',
+        qty: '4 Pcs',
+        estimatedCost: 920000,
+        vendor: 'Teknik Perkasa Graha',
+        status: 'Proses Beli/Order',
+        estArrivalDate: '2026-09-27',
+        notes: 'Menunggu konfirmasi ketersediaan barang'
+      }
+    ];
+
+    const sampleTagihan = [
+      {
+        id: 'TAG-001',
+        invoiceNo: 'INV/2026/09/012',
+        vendor: 'PT Cahaya Tinta Cemerlang',
+        category: 'Vendor Bahan',
+        description: 'Pembelian Tinta Cyan & Magenta Offset',
+        amount: 3200000,
+        invoiceDate: '2026-09-10',
+        dueDate: '2026-09-24', // Hari ini / Warning
+        status: 'unpaid',
+        paidDate: ''
+      },
+      {
+        id: 'TAG-002',
+        invoiceNo: 'PLN-SEP-2026',
+        vendor: 'PLN Persero',
+        category: 'Utilitas (Listrik/Air/Internet)',
+        description: 'Tagihan Listrik Workshop Periode September',
+        amount: 4500000,
+        invoiceDate: '2026-09-05',
+        dueDate: '2026-09-20', // Overdue
+        status: 'unpaid',
+        paidDate: ''
+      },
+      {
+        id: 'TAG-003',
+        invoiceNo: 'KRG-2026-90',
+        vendor: 'Kargo Cepat Nusantara',
+        category: 'Ekspedisi & Transport',
+        description: 'Biaya Pengiriman Hasil Cetak Luar Kota',
+        amount: 750000,
+        invoiceDate: '2026-09-15',
+        dueDate: '2026-09-30', // Aman
+        status: 'unpaid',
+        paidDate: ''
+      },
+      {
+        id: 'TAG-004',
+        invoiceNo: 'SRV-8821',
+        vendor: 'Bengkel Dinamo Makmur',
+        category: 'Jasa & Pemeliharaan',
+        description: 'Servis Dinamo Mesin Potong DQ201',
+        amount: 600000,
+        invoiceDate: '2026-09-08',
+        dueDate: '2026-09-15',
+        status: 'paid',
+        paidDate: '2026-09-14'
+      }
+    ];
+
+    // --- INITIALIZATION ---
+    window.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      initClock();
+      renderAll();
+      checkGasStatus();
+      setDefaultDates();
+    });
+
+    function loadData() {
+      const storedTasks = localStorage.getItem(STORAGE_KEY_TASKS);
+      const storedPurchasing = localStorage.getItem(STORAGE_KEY_PURCHASING);
+      const storedTagihan = localStorage.getItem(STORAGE_KEY_TAGIHAN);
+
+      state.tasks = storedTasks ? JSON.parse(storedTasks) : sampleTasks;
+      state.purchasing = storedPurchasing ? JSON.parse(storedPurchasing) : samplePurchasing;
+      state.tagihan = storedTagihan ? JSON.parse(storedTagihan) : sampleTagihan;
+
+      // Save initial if empty
+      if (!storedTasks) saveState();
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY_TASKS, JSON.stringify(state.tasks));
+      localStorage.setItem(STORAGE_KEY_PURCHASING, JSON.stringify(state.purchasing));
+      localStorage.setItem(STORAGE_KEY_TAGIHAN, JSON.stringify(state.tagihan));
+    }
+
+    function setDefaultDates() {
+      const todayStr = new Date().toISOString().split('T')[0];
+      if (document.getElementById('purchasingDate')) document.getElementById('purchasingDate').value = todayStr;
+      if (document.getElementById('tagihanDate')) document.getElementById('tagihanDate').value = todayStr;
+      if (document.getElementById('tagihanDueDate')) document.getElementById('tagihanDueDate').value = todayStr;
+    }
+
+    function initClock() {
+      const clockEl = document.getElementById('clockText');
+      function update() {
+        const now = new Date();
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const day = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+        const time = now.toTimeString().split(' ')[0];
+        if (clockEl) clockEl.textContent = `${day}, ${date} ${month} ${year} • ${time} WIB`;
+      }
+      update();
+      setInterval(update, 1000);
+    }
+
+    // --- TAB SWITCHING ---
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
+
+      const targetPane = document.getElementById('tab-' + tabId);
+      if (targetPane) targetPane.classList.add('active');
+
+      const buttons = document.querySelectorAll('.nav-tab-btn');
+      const tabIndexMap = { 'dashboard': 0, 'jobdesk': 1, 'purchasing': 2, 'tagihan': 3, 'settings': 4 };
+      if (buttons[tabIndexMap[tabId]]) {
+        buttons[tabIndexMap[tabId]].classList.add('active');
+      }
+
+      renderAll();
+    }
+
+    // --- TOAST NOTIFICATION ---
+    function showToast(message, icon = 'fa-solid fa-check-circle') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast-message';
+      toast.innerHTML = `<i class="${icon}"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.transition = 'opacity 0.3s, transform 0.3s';
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(50px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // --- FORMATTERS ---
+    function formatRp(val) {
+      const num = Number(val) || 0;
+      return 'Rp ' + num.toLocaleString('id-ID');
+    }
+
+    function formatDateIndo(dateStr) {
+      if (!dateStr) return '-';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    }
+
+    // --- TAGIHAN STATUS HELPER ---
+    function getTagihanDueInfo(dueDateStr, status) {
+      if (status === 'paid') {
+        return { label: 'Lunas', class: 'badge-green', alert: 'paid', text: 'Sudah Lunas' };
+      }
+      if (!dueDateStr) {
+        return { label: 'Belum Lunas', class: 'badge-gray', alert: 'safe', text: '-' };
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const due = new Date(dueDateStr);
+      due.setHours(0, 0, 0, 0);
+
+      const diffTime = due.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) {
+        return {
+          label: `Terlambat (${Math.abs(diffDays)} hr)`,
+          class: 'badge-red',
+          alert: 'overdue',
+          textClass: 'due-overdue',
+          text: `Overdue ${Math.abs(diffDays)} hari lalu`
+        };
+      } else if (diffDays <= 3) {
+        return {
+          label: diffDays === 0 ? 'Jatuh Tempo Hari Ini!' : `Jatuh Tempo H-${diffDays}`,
+          class: 'badge-yellow',
+          alert: 'due_soon',
+          textClass: 'due-warning',
+          text: diffDays === 0 ? 'Hari Ini' : `H-${diffDays} lagi`
+        };
+      } else {
+        return {
+          label: 'Pending',
+          class: 'badge-blue',
+          alert: 'safe',
+          textClass: 'due-safe',
+          text: `${diffDays} hari lagi`
+        };
+      }
+    }
+
+    // --- RENDER ALL MODULES ---
+    function renderAll() {
+      updateBadges();
+      renderDashboard();
+      renderJobdeskTable();
+      renderPurchasingTable();
+      renderTagihanTable();
+    }
+
+    function updateBadges() {
+      document.getElementById('badgeJobdeskCount').textContent = state.tasks.filter(t => t.status !== 'completed').length;
+      document.getElementById('badgePurchasingCount').textContent = state.purchasing.filter(p => p.status !== 'Barang Diterima' && p.status !== 'Ditolak').length;
+      document.getElementById('badgeTagihanCount').textContent = state.tagihan.filter(t => t.status === 'unpaid').length;
+    }
+
+    // ==============================================
+    // 1. DASHBOARD LOGIC
+    // ==============================================
+    function renderDashboard() {
+      // Job desk calculation
+      const totalTasks = state.tasks.length;
+      const completedTasks = state.tasks.filter(t => t.status === 'completed').length;
+      const percent = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+
+      document.getElementById('kpiJobdeskPercent').textContent = percent + '%';
+      document.getElementById('kpiJobdeskRatio').textContent = `${completedTasks} dari ${totalTasks} tugas selesai`;
+
+      // Purchasing calculation
+      const activePurchasing = state.purchasing.filter(p => p.status !== 'Barang Diterima' && p.status !== 'Ditolak').length;
+      document.getElementById('kpiPurchasingActive').textContent = `${activePurchasing} Pengadaan`;
+
+      // Invoices calculation
+      let unpaidTotal = 0;
+      let unpaidCount = 0;
+      let alertCount = 0;
+      let alertNominal = 0;
+
+      state.tagihan.forEach(inv => {
+        if (inv.status === 'unpaid') {
+          const amt = Number(inv.amount) || 0;
+          unpaidTotal += amt;
+          unpaidCount++;
+
+          const dueInfo = getTagihanDueInfo(inv.dueDate, inv.status);
+          if (dueInfo.alert === 'overdue' || dueInfo.alert === 'due_soon') {
+            alertCount++;
+            alertNominal += amt;
+          }
+        }
+      });
+
+      document.getElementById('kpiTagihanAlertCount').textContent = `${alertCount} Tagihan`;
+      document.getElementById('kpiTagihanAlertNominal').textContent = `${formatRp(alertNominal)} perlu atensi`;
+      document.getElementById('kpiTagihanUnpaidTotal').textContent = formatRp(unpaidTotal);
+      document.getElementById('kpiTagihanUnpaidCount').textContent = `${unpaidCount} invoice pending`;
+
+      // Dashboard Quick Task List
+      const taskBody = document.getElementById('dashboardTasksList');
+      if (taskBody) {
+        if (state.tasks.length === 0) {
+          taskBody.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fa-regular fa-clipboard"></i><div class="empty-state-title">Belum ada tugas</div></td></tr>`;
+        } else {
+          taskBody.innerHTML = state.tasks.slice(0, 5).map(task => `
+            <tr>
+              <td>
+                <input type="checkbox" class="task-checkbox" ${task.status === 'completed' ? 'checked' : ''} onchange="toggleTaskStatus('${task.id}')">
+              </td>
+              <td>
+                <div style="font-weight: 600; ${task.status === 'completed' ? 'text-decoration: line-through; color: var(--text-muted);' : ''}">${escapeHtml(task.title)}</div>
+              </td>
+              <td><span class="badge badge-gray">${escapeHtml(task.category)}</span></td>
+              <td><span style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(task.dueTime || '-')}</span></td>
+              <td><strong>${escapeHtml(task.pic || '-')}</strong></td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      // Dashboard Urgent Invoices List
+      const invoiceBody = document.getElementById('dashboardInvoicesList');
+      if (invoiceBody) {
+        const pendingList = state.tagihan.filter(t => t.status === 'unpaid')
+          .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+          .slice(0, 5);
+
+        if (pendingList.length === 0) {
+          invoiceBody.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fa-regular fa-circle-check" style="color: var(--success);"></i><div class="empty-state-title">Semua Tagihan Lunas!</div></td></tr>`;
+        } else {
+          invoiceBody.innerHTML = pendingList.map(inv => {
+            const dueInfo = getTagihanDueInfo(inv.dueDate, inv.status);
+            return `
+              <tr>
+                <td><strong>${escapeHtml(inv.invoiceNo)}</strong></td>
+                <td>${escapeHtml(inv.vendor)}</td>
+                <td>
+                  <span class="${dueInfo.textClass || ''}">${formatDateIndo(inv.dueDate)}</span>
+                  <div style="font-size: 0.72rem; color: var(--text-muted);">${dueInfo.text}</div>
+                </td>
+                <td><strong>${formatRp(inv.amount)}</strong></td>
+                <td><span class="badge ${dueInfo.class}">${dueInfo.label}</span></td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+    }
+
+    // ==============================================
+    // 2. CHECKLIST JOB DESK LOGIC
+    // ==============================================
+    function renderJobdeskTable() {
+      const search = (document.getElementById('taskSearchInput')?.value || '').toLowerCase();
+      const cat = document.getElementById('taskCategoryFilter')?.value || 'all';
+      const freq = document.getElementById('taskFreqFilter')?.value || 'all';
+      const status = document.getElementById('taskStatusFilter')?.value || 'all';
+
+      const filtered = state.tasks.filter(t => {
+        const matchesSearch = t.title.toLowerCase().includes(search) || (t.pic && t.pic.toLowerCase().includes(search));
+        const matchesCat = cat === 'all' || t.category === cat;
+        const matchesFreq = freq === 'all' || t.frequency === freq;
+        const matchesStatus = status === 'all' || t.status === status;
+        return matchesSearch && matchesCat && matchesFreq && matchesStatus;
+      });
+
+      // Update progress bar
+      const total = state.tasks.length;
+      const completed = state.tasks.filter(t => t.status === 'completed').length;
+      const p = total === 0 ? 0 : Math.round((completed / total) * 100);
+      const pBar = document.getElementById('jobdeskProgressBar');
+      const pTxt = document.getElementById('jobdeskProgressPercent');
+      if (pBar) pBar.style.width = p + '%';
+      if (pTxt) pTxt.textContent = p + '% Selesai (' + completed + '/' + total + ')';
+
+      const tbody = document.getElementById('jobdeskTableBody');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty-state"><i class="fa-solid fa-list-check"></i><div class="empty-state-title">Tidak ada tugas ditemukan</div><div class="empty-state-desc">Ubah filter pencarian atau klik Tambah Tugas Baru.</div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(task => {
+        const isDone = task.status === 'completed';
+        return `
+          <tr>
+            <td>
+              <input type="checkbox" class="task-checkbox" ${isDone ? 'checked' : ''} onchange="toggleTaskStatus('${task.id}')">
+            </td>
+            <td>
+              <div style="font-weight: 600; font-size: 0.9rem; ${isDone ? 'text-decoration: line-through; color: var(--text-muted);' : ''}">${escapeHtml(task.title)}</div>
+            </td>
+            <td><span class="badge badge-gray">${escapeHtml(task.category)}</span></td>
+            <td><span class="badge badge-blue">${escapeHtml(task.frequency)}</span></td>
+            <td><i class="fa-regular fa-clock" style="color: var(--text-subtle);"></i> ${escapeHtml(task.dueTime || '-')}</td>
+            <td><strong>${escapeHtml(task.pic || '-')}</strong></td>
+            <td><span style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(task.notes || '-')}</span></td>
+            <td>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn btn-outline btn-icon" onclick="editTask('${task.id}')" title="Edit Tugas">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-outline btn-icon" style="color: var(--danger);" onclick="deleteTask('${task.id}')" title="Hapus Tugas">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleTaskStatus(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (task) {
+        task.status = task.status === 'completed' ? 'pending' : 'completed';
+        saveState();
+        renderAll();
+        showToast(task.status === 'completed' ? 'Tugas diselesaikan! 👍' : 'Status tugas dikembalikan ke pending');
+      }
+    }
+
+    function resetTodayTasks() {
+      if (confirm('Apakah Anda ingin mereset checklist semua tugas menjadi Belum Selesai untuk memulai hari baru?')) {
+        state.tasks.forEach(t => t.status = 'pending');
+        saveState();
+        renderAll();
+        showToast('Checklist tugas berhasil direset untuk hari ini!', 'fa-solid fa-arrows-rotate');
+      }
+    }
+
+    function openAddTaskModal() {
+      document.getElementById('formTask').reset();
+      document.getElementById('taskId').value = '';
+      document.getElementById('modalTaskTitle').textContent = 'Tambah Tugas Job Desk Baru';
+      openModal('modalTask');
+    }
+
+    function editTask(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (!task) return;
+      document.getElementById('taskId').value = task.id;
+      document.getElementById('taskTitle').value = task.title;
+      document.getElementById('taskCategory').value = task.category;
+      document.getElementById('taskFrequency').value = task.frequency;
+      document.getElementById('taskDueTime').value = task.dueTime || '';
+      document.getElementById('taskPic').value = task.pic || '';
+      document.getElementById('taskNotes').value = task.notes || '';
+      document.getElementById('modalTaskTitle').textContent = 'Edit Tugas Job Desk';
+      openModal('modalTask');
+    }
+
+    function handleSaveTask(e) {
+      e.preventDefault();
+      const id = document.getElementById('taskId').value;
+      const title = document.getElementById('taskTitle').value.trim();
+      const category = document.getElementById('taskCategory').value;
+      const frequency = document.getElementById('taskFrequency').value;
+      const dueTime = document.getElementById('taskDueTime').value.trim();
+      const pic = document.getElementById('taskPic').value.trim();
+      const notes = document.getElementById('taskNotes').value.trim();
+
+      if (!title) return;
+
+      if (id) {
+        // Edit
+        const t = state.tasks.find(x => x.id === id);
+        if (t) {
+          t.title = title;
+          t.category = category;
+          t.frequency = frequency;
+          t.dueTime = dueTime;
+          t.pic = pic;
+          t.notes = notes;
+        }
+        showToast('Tugas berhasil diperbarui!');
+      } else {
+        // Add new
+        const newTask = {
+          id: 'TASK-' + Date.now().toString().slice(-5),
+          title,
+          category,
+          frequency,
+          dueTime,
+          pic: pic || 'Admin',
+          status: 'pending',
+          notes
+        };
+        state.tasks.unshift(newTask);
+        showToast('Tugas baru berhasil ditambahkan!');
+      }
+
+      saveState();
+      closeModal('modalTask');
+      renderAll();
+    }
+
+    function deleteTask(id) {
+      if (confirm('Yakin ingin menghapus tugas ini?')) {
+        state.tasks = state.tasks.filter(t => t.id !== id);
+        saveState();
+        renderAll();
+        showToast('Tugas dihapus', 'fa-solid fa-trash');
+      }
+    }
+
+    // ==============================================
+    // 3. MONITORING PURCHASING LOGIC
+    // ==============================================
+    function renderPurchasingTable() {
+      const search = (document.getElementById('purchasingSearchInput')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('purchasingStatusFilter')?.value || 'all';
+      const catFilter = document.getElementById('purchasingCategoryFilter')?.value || 'all';
+
+      const filtered = state.purchasing.filter(p => {
+        const matchesSearch = p.itemName.toLowerCase().includes(search) || 
+                              (p.poNumber && p.poNumber.toLowerCase().includes(search)) ||
+                              (p.vendor && p.vendor.toLowerCase().includes(search));
+        const matchesStatus = statusFilter === 'all' || p.status === statusFilter;
+        const matchesCat = catFilter === 'all' || p.category === catFilter;
+        return matchesSearch && matchesStatus && matchesCat;
+      });
+
+      const tbody = document.getElementById('purchasingTableBody');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="11" class="empty-state"><i class="fa-solid fa-cart-shopping"></i><div class="empty-state-title">Tidak ada pengadaan ditemukan</div><div class="empty-state-desc">Ubah filter atau buat pengajuan purchasing baru.</div></td></tr>`;
+        return;
+      }
+
+      const statusBadgeMap = {
+        'Diajukan': 'badge-gray',
+        'Disetujui': 'badge-blue',
+        'Proses Beli/Order': 'badge-yellow',
+        'Dalam Pengiriman': 'badge-purple',
+        'Barang Diterima': 'badge-green',
+        'Ditolak': 'badge-red'
+      };
+
+      tbody.innerHTML = filtered.map(item => {
+        const badgeClass = statusBadgeMap[item.status] || 'badge-gray';
+        return `
+          <tr>
+            <td><strong>${escapeHtml(item.poNumber || item.id)}</strong></td>
+            <td>${formatDateIndo(item.requestDate)}</td>
+            <td>
+              <div style="font-weight: 700; font-size: 0.88rem;">${escapeHtml(item.itemName)}</div>
+              ${item.notes ? `<div style="font-size: 0.74rem; color: var(--text-muted);">${escapeHtml(item.notes)}</div>` : ''}
+            </td>
+            <td><span class="badge badge-gray">${escapeHtml(item.category)}</span></td>
+            <td>${escapeHtml(item.division || '-')}</td>
+            <td><strong>${escapeHtml(item.qty || '-')}</strong></td>
+            <td><strong>${formatRp(item.estimatedCost)}</strong></td>
+            <td>${escapeHtml(item.vendor || '-')}</td>
+            <td><span class="badge ${badgeClass}">${escapeHtml(item.status)}</span></td>
+            <td>${formatDateIndo(item.estArrivalDate)}</td>
+            <td>
+              <div style="display: flex; gap: 4px;">
+                <button class="btn btn-outline btn-icon" onclick="editPurchasing('${item.id}')" title="Edit Pengadaan">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-outline btn-icon" style="color: var(--danger);" onclick="deletePurchasing('${item.id}')" title="Hapus Pengadaan">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openAddPurchasingModal() {
+      document.getElementById('formPurchasing').reset();
+      document.getElementById('purchasingId').value = '';
+      document.getElementById('purchasingNo').value = 'PO-' + new Date().getFullYear() + '-' + String(state.purchasing.length + 1).padStart(3, '0');
+      document.getElementById('purchasingDate').value = new Date().toISOString().split('T')[0];
+      document.getElementById('modalPurchasingTitle').textContent = 'Pengajuan Purchasing Barang Baru';
+      openModal('modalPurchasing');
+    }
+
+    function editPurchasing(id) {
+      const item = state.purchasing.find(p => p.id === id);
+      if (!item) return;
+      document.getElementById('purchasingId').value = item.id;
+      document.getElementById('purchasingNo').value = item.poNumber || item.id;
+      document.getElementById('purchasingDate').value = item.requestDate || '';
+      document.getElementById('purchasingItem').value = item.itemName;
+      document.getElementById('purchasingCat').value = item.category;
+      document.getElementById('purchasingDivision').value = item.division || '';
+      document.getElementById('purchasingQty').value = item.qty || '';
+      document.getElementById('purchasingCost').value = item.estimatedCost || 0;
+      document.getElementById('purchasingVendor').value = item.vendor || '';
+      document.getElementById('purchasingStatus').value = item.status;
+      document.getElementById('purchasingEstArrival').value = item.estArrivalDate || '';
+      document.getElementById('purchasingNotes').value = item.notes || '';
+      document.getElementById('modalPurchasingTitle').textContent = 'Edit Data Purchasing';
+      openModal('modalPurchasing');
+    }
+
+    function handleSavePurchasing(e) {
+      e.preventDefault();
+      const id = document.getElementById('purchasingId').value;
+      const poNumber = document.getElementById('purchasingNo').value.trim();
+      const requestDate = document.getElementById('purchasingDate').value;
+      const itemName = document.getElementById('purchasingItem').value.trim();
+      const category = document.getElementById('purchasingCat').value;
+      const division = document.getElementById('purchasingDivision').value.trim();
+      const qty = document.getElementById('purchasingQty').value.trim();
+      const estimatedCost = Number(document.getElementById('purchasingCost').value) || 0;
+      const vendor = document.getElementById('purchasingVendor').value.trim();
+      const status = document.getElementById('purchasingStatus').value;
+      const estArrivalDate = document.getElementById('purchasingEstArrival').value;
+      const notes = document.getElementById('purchasingNotes').value.trim();
+
+      if (!itemName) return;
+
+      if (id) {
+        const item = state.purchasing.find(p => p.id === id);
+        if (item) {
+          Object.assign(item, { poNumber, requestDate, itemName, category, division, qty, estimatedCost, vendor, status, estArrivalDate, notes });
+        }
+        showToast('Data purchasing diperbarui!');
+      } else {
+        const newItem = {
+          id: 'PO-' + Date.now().toString().slice(-6),
+          poNumber,
+          requestDate,
+          itemName,
+          category,
+          division,
+          qty,
+          estimatedCost,
+          vendor,
+          status,
+          estArrivalDate,
+          notes
+        };
+        state.purchasing.unshift(newItem);
+        showToast('Pengajuan purchasing berhasil disimpan!');
+      }
+
+      saveState();
+      closeModal('modalPurchasing');
+      renderAll();
+    }
+
+    function deletePurchasing(id) {
+      if (confirm('Hapus data pengadaan barang ini?')) {
+        state.purchasing = state.purchasing.filter(p => p.id !== id);
+        saveState();
+        renderAll();
+        showToast('Data purchasing dihapus', 'fa-solid fa-trash');
+      }
+    }
+
+    // ==============================================
+    // 4. MONITORING TAGIHAN LOGIC
+    // ==============================================
+    function renderTagihanTable() {
+      const search = (document.getElementById('tagihanSearchInput')?.value || '').toLowerCase();
+      const statusFilter = document.getElementById('tagihanStatusFilter')?.value || 'all';
+      const catFilter = document.getElementById('tagihanCategoryFilter')?.value || 'all';
+
+      const filtered = state.tagihan.filter(item => {
+        const matchesSearch = item.invoiceNo.toLowerCase().includes(search) || 
+                              item.vendor.toLowerCase().includes(search) ||
+                              (item.description && item.description.toLowerCase().includes(search));
+        const matchesCat = catFilter === 'all' || item.category === catFilter;
+
+        const dueInfo = getTagihanDueInfo(item.dueDate, item.status);
+        let matchesStatus = true;
+        if (statusFilter === 'unpaid') matchesStatus = item.status === 'unpaid';
+        else if (statusFilter === 'paid') matchesStatus = item.status === 'paid';
+        else if (statusFilter === 'overdue') matchesStatus = item.status === 'unpaid' && dueInfo.alert === 'overdue';
+        else if (statusFilter === 'due_soon') matchesStatus = item.status === 'unpaid' && dueInfo.alert === 'due_soon';
+
+        return matchesSearch && matchesCat && matchesStatus;
+      });
+
+      const tbody = document.getElementById('tagihanTableBody');
+      if (!tbody) return;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="10" class="empty-state"><i class="fa-solid fa-file-invoice-dollar"></i><div class="empty-state-title">Tidak ada data tagihan</div><div class="empty-state-desc">Ubah filter pencarian atau catat tagihan baru.</div></td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(item => {
+        const dueInfo = getTagihanDueInfo(item.dueDate, item.status);
+        return `
+          <tr>
+            <td><strong>${escapeHtml(item.invoiceNo)}</strong></td>
+            <td>
+              <div style="font-weight: 700; font-size: 0.88rem;">${escapeHtml(item.vendor)}</div>
+            </td>
+            <td><span class="badge badge-gray">${escapeHtml(item.category)}</span></td>
+            <td><span style="font-size: 0.8rem; color: var(--text-muted);">${escapeHtml(item.description || '-')}</span></td>
+            <td><strong style="color: var(--text-main); font-size: 0.92rem;">${formatRp(item.amount)}</strong></td>
+            <td>${formatDateIndo(item.invoiceDate)}</td>
+            <td>
+              <span class="${dueInfo.textClass || ''}">${formatDateIndo(item.dueDate)}</span>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">${dueInfo.text}</div>
+            </td>
+            <td><span class="badge ${dueInfo.class}">${dueInfo.label}</span></td>
+            <td>${item.status === 'paid' ? formatDateIndo(item.paidDate) : '-'}</td>
+            <td>
+              <div style="display: flex; gap: 4px; align-items: center;">
+                ${item.status === 'unpaid' ? `
+                  <button class="btn btn-success btn-icon" onclick="quickPayTagihan('${item.id}')" title="Tandai Sudah Lunas">
+                    <i class="fa-solid fa-check"></i>
+                  </button>
+                ` : `
+                  <button class="btn btn-outline btn-icon" onclick="quickUnpayTagihan('${item.id}')" title="Kembalikan ke Belum Lunas">
+                    <i class="fa-solid fa-rotate-left"></i>
+                  </button>
+                `}
+                <button class="btn btn-outline btn-icon" onclick="editTagihan('${item.id}')" title="Edit Tagihan">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="btn btn-outline btn-icon" style="color: var(--danger);" onclick="deleteTagihan('${item.id}')" title="Hapus Tagihan">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function togglePaymentDateGroup() {
+      const status = document.getElementById('tagihanStatus').value;
+      const group = document.getElementById('groupPaymentDate');
+      if (status === 'paid') {
+        group.style.display = 'block';
+        if (!document.getElementById('tagihanPaidDate').value) {
+          document.getElementById('tagihanPaidDate').value = new Date().toISOString().split('T')[0];
+        }
+      } else {
+        group.style.display = 'none';
+        document.getElementById('tagihanPaidDate').value = '';
+      }
+    }
+
+    function openAddTagihanModal() {
+      document.getElementById('formTagihan').reset();
+      document.getElementById('tagihanId').value = '';
+      document.getElementById('tagihanDate').value = new Date().toISOString().split('T')[0];
+      const nextWeek = new Date();
+      nextWeek.setDate(nextWeek.getDate() + 14);
+      document.getElementById('tagihanDueDate').value = nextWeek.toISOString().split('T')[0];
+      document.getElementById('tagihanStatus').value = 'unpaid';
+      togglePaymentDateGroup();
+      document.getElementById('modalTagihanTitle').textContent = 'Catat Tagihan / Invoice Masuk Baru';
+      openModal('modalTagihan');
+    }
+
+    function editTagihan(id) {
+      const item = state.tagihan.find(t => t.id === id);
+      if (!item) return;
+      document.getElementById('tagihanId').value = item.id;
+      document.getElementById('tagihanInvoiceNo').value = item.invoiceNo;
+      document.getElementById('tagihanVendor').value = item.vendor;
+      document.getElementById('tagihanCategory').value = item.category;
+      document.getElementById('tagihanAmount').value = item.amount;
+      document.getElementById('tagihanDate').value = item.invoiceDate || '';
+      document.getElementById('tagihanDueDate').value = item.dueDate || '';
+      document.getElementById('tagihanDesc').value = item.description || '';
+      document.getElementById('tagihanStatus').value = item.status;
+      document.getElementById('tagihanPaidDate').value = item.paidDate || '';
+      togglePaymentDateGroup();
+      document.getElementById('modalTagihanTitle').textContent = 'Edit Data Tagihan';
+      openModal('modalTagihan');
+    }
+
+    function handleSaveTagihan(e) {
+      e.preventDefault();
+      const id = document.getElementById('tagihanId').value;
+      const invoiceNo = document.getElementById('tagihanInvoiceNo').value.trim();
+      const vendor = document.getElementById('tagihanVendor').value.trim();
+      const category = document.getElementById('tagihanCategory').value;
+      const amount = Number(document.getElementById('tagihanAmount').value) || 0;
+      const invoiceDate = document.getElementById('tagihanDate').value;
+      const dueDate = document.getElementById('tagihanDueDate').value;
+      const description = document.getElementById('tagihanDesc').value.trim();
+      const status = document.getElementById('tagihanStatus').value;
+      const paidDate = status === 'paid' ? document.getElementById('tagihanPaidDate').value : '';
+
+      if (!invoiceNo || !vendor) return;
+
+      if (id) {
+        const item = state.tagihan.find(t => t.id === id);
+        if (item) {
+          Object.assign(item, { invoiceNo, vendor, category, amount, invoiceDate, dueDate, description, status, paidDate });
+        }
+        showToast('Data tagihan berhasil diperbarui!');
+      } else {
+        const newItem = {
+          id: 'TAG-' + Date.now().toString().slice(-6),
+          invoiceNo,
+          vendor,
+          category,
+          amount,
+          invoiceDate,
+          dueDate,
+          description,
+          status,
+          paidDate
+        };
+        state.tagihan.unshift(newItem);
+        showToast('Tagihan baru berhasil dicatat!');
+      }
+
+      saveState();
+      closeModal('modalTagihan');
+      renderAll();
+    }
+
+    function quickPayTagihan(id) {
+      const item = state.tagihan.find(t => t.id === id);
+      if (item) {
+        item.status = 'paid';
+        item.paidDate = new Date().toISOString().split('T')[0];
+        saveState();
+        renderAll();
+        showToast(`Tagihan ${item.invoiceNo} berhasil ditandai Lunas!`, 'fa-solid fa-check-circle');
+      }
+    }
+
+    function quickUnpayTagihan(id) {
+      const item = state.tagihan.find(t => t.id === id);
+      if (item) {
+        item.status = 'unpaid';
+        item.paidDate = '';
+        saveState();
+        renderAll();
+        showToast(`Status tagihan ${item.invoiceNo} dikembalikan ke Pending`);
+      }
+    }
+
+    function deleteTagihan(id) {
+      if (confirm('Hapus pencatatan tagihan ini?')) {
+        state.tagihan = state.tagihan.filter(t => t.id !== id);
+        saveState();
+        renderAll();
+        showToast('Tagihan dihapus', 'fa-solid fa-trash');
+      }
+    }
+
+    // ==============================================
+    // 5. EXPORT & BACKUP LOGIC
+    // ==============================================
+    function exportJobdeskCSV() {
+      let csv = 'Check,Nama Tugas,Kategori,Frekuensi,Target Waktu,PIC,Catatan,Status\n';
+      state.tasks.forEach(t => {
+        csv += `"${t.status === 'completed' ? 'V' : '-'}","${t.title.replace(/"/g, '""')}","${t.category}","${t.frequency}","${t.dueTime || ''}","${t.pic || ''}","${(t.notes || '').replace(/"/g, '""')}","${t.status}"\n`;
+      });
+      downloadFile(csv, 'Checklist_Jobdesk_' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv;charset=utf-8;');
+    }
+
+    function exportPurchasingCSV() {
+      let csv = 'No PO,Tanggal Request,Nama Barang,Kategori,Divisi,Qty,Estimasi Biaya,Vendor,Status,Est Tiba,Catatan\n';
+      state.purchasing.forEach(p => {
+        csv += `"${p.poNumber || p.id}","${p.requestDate}","${p.itemName.replace(/"/g, '""')}","${p.category}","${p.division || ''}","${p.qty || ''}","${p.estimatedCost}","${(p.vendor || '').replace(/"/g, '""')}","${p.status}","${p.estArrivalDate || ''}","${(p.notes || '').replace(/"/g, '""')}"\n`;
+      });
+      downloadFile(csv, 'Monitoring_Purchasing_' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv;charset=utf-8;');
+    }
+
+    function exportTagihanCSV() {
+      let csv = 'No Invoice,Vendor,Kategori,Nominal,Tanggal Tagihan,Jatuh Tempo,Status,Tanggal Lunas,Keterangan\n';
+      state.tagihan.forEach(t => {
+        csv += `"${t.invoiceNo}","${t.vendor.replace(/"/g, '""')}","${t.category}","${t.amount}","${t.invoiceDate}","${t.dueDate}","${t.status}","${t.paidDate || ''}","${(t.description || '').replace(/"/g, '""')}"\n`;
+      });
+      downloadFile(csv, 'Monitoring_Tagihan_' + new Date().toISOString().split('T')[0] + '.csv', 'text/csv;charset=utf-8;');
+    }
+
+    function downloadBackupJSON() {
+      const backupData = {
+        version: '1.0',
+        exportedAt: new Date().toISOString(),
+        tasks: state.tasks,
+        purchasing: state.purchasing,
+        tagihan: state.tagihan
+      };
+      downloadFile(JSON.stringify(backupData, null, 2), 'Backup_WPI_Admin_' + new Date().toISOString().split('T')[0] + '.json', 'application/json');
+      showToast('Cadangan data berhasil didownload!');
+    }
+
+    function handleRestoreJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed.tasks && parsed.purchasing && parsed.tagihan) {
+            state.tasks = parsed.tasks;
+            state.purchasing = parsed.purchasing;
+            state.tagihan = parsed.tagihan;
+            saveState();
+            renderAll();
+            showToast('Data berhasil dipulihkan dari file cadangan!', 'fa-solid fa-cloud-arrow-down');
+          } else {
+            alert('Format file JSON tidak valid!');
+          }
+        } catch (err) {
+          alert('Gagal membaca file JSON: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function loadSampleData() {
+      if (confirm('Kembalikan ke data contoh staf administrasi WPI? Data yang sudah diedit akan ditimpa.')) {
+        state.tasks = JSON.parse(JSON.stringify(sampleTasks));
+        state.purchasing = JSON.parse(JSON.stringify(samplePurchasing));
+        state.tagihan = JSON.parse(JSON.stringify(sampleTagihan));
+        saveState();
+        renderAll();
+        showToast('Data sampel berhasil dimuat ulang!', 'fa-solid fa-rotate-left');
+      }
+    }
+
+    function downloadFile(content, fileName, contentType) {
+      const a = document.createElement('a');
+      const file = new Blob([content], { type: contentType });
+      a.href = URL.createObjectURL(file);
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    // ==============================================
+    // 6. GOOGLE SHEETS SYNC LOGIC
+    // ==============================================
+    function openSyncModal() {
+      switchTab('settings');
+      showToast('Buka tab Pengaturan untuk konfigurasi Google Spreadsheet', 'fa-solid fa-gear');
+    }
+
+    function checkGasStatus() {
+      const dot = document.getElementById('syncStatusDot');
+      const text = document.getElementById('syncStatusText');
+      const urlInput = document.getElementById('settingGasUrl');
+      if (urlInput) urlInput.value = state.gasUrl;
+
+      if (state.gasUrl) {
+        dot.className = 'sync-dot connected';
+        text.textContent = 'Google Sheet Terhubung';
+      } else {
+        dot.className = 'sync-dot';
+        text.textContent = 'Database Lokal (Ready)';
+      }
+    }
+
+    function saveGasUrl() {
+      const url = document.getElementById('settingGasUrl').value.trim();
+      state.gasUrl = url;
+      localStorage.setItem(STORAGE_KEY_GAS_URL, url);
+      checkGasStatus();
+      showToast('URL Google Apps Script disimpan!');
+    }
+
+    async function testGasConnection() {
+      if (!state.gasUrl) {
+        alert('Masukkan URL Google Apps Script terlebih dahulu!');
+        return;
+      }
+      showToast('Menguji koneksi ke Google Spreadsheet...', 'fa-solid fa-spinner fa-spin');
+      try {
+        const res = await fetch(state.gasUrl + '?action=ping', { method: 'GET' });
+        const json = await res.json();
+        if (json.status === 'success') {
+          showToast('Koneksi Google Spreadsheet Sukses! ✅');
+        } else {
+          showToast('Respon diterima namun status: ' + json.message, 'fa-solid fa-triangle-exclamation');
+        }
+      } catch (err) {
+        showToast('Koneksi gagal. Pastikan Deployment Apps Script "Anyone" (Siapa Saja).', 'fa-solid fa-triangle-exclamation');
+      }
+    }
+
+    async function syncAllToCloud() {
+      if (!state.gasUrl) {
+        alert('Harap hubungkan URL Google Apps Script terlebih dahulu di menu ini!');
+        return;
+      }
+      showToast('Mengunggah data ke Google Spreadsheet...', 'fa-solid fa-cloud-arrow-up');
+      try {
+        const payload = {
+          action: 'syncAll',
+          tasks: state.tasks,
+          purchasing: state.purchasing,
+          tagihan: state.tagihan
+        };
+        const res = await fetch(state.gasUrl, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          showToast('Sinkronisasi Sukses! Seluruh data tercatat di Google Sheet. ✅');
+        } else {
+          showToast('Sinkronisasi selesai dengan catatan: ' + result.message);
+        }
+      } catch (err) {
+        showToast('Gagal sinkron: ' + err.message, 'fa-solid fa-triangle-exclamation');
+      }
+    }
+
+    // --- MODAL UTILITIES ---
+    function openModal(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) m.classList.add('show');
+    }
+
+    function closeModal(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) m.classList.remove('show');
+    }
+
+    // Close on click backdrop
+    window.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal-backdrop')) {
+        e.target.classList.remove('show');
+      }
+    });
+
+    // Escape HTML helper
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
